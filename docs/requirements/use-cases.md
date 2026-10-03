@@ -1408,6 +1408,79 @@ Details:
 **Assumptions:**
 **Open Issues:**
 
+### **UC-STU-remind-non-submitters: The instructor views and reminds students with outstanding submissions**
+
+**UC ID and Name:** UC-STU-remind-non-submitters: View and remind students with outstanding submissions
+**Created By:** McKenzie Mitchell-Richardson
+**Date Created:** October 2, 2026
+**Primary Actor:** instructor
+**Secondary Actors:** student
+**Trigger:** The instructor indicates to view the students with outstanding submissions for a selected week in a course section.
+**Description:** The instructor wants to identify students with outstanding weekly activity reports or peer evaluations for a course section, so that she can see who has not submitted and send reminders to students who can still submit the outstanding work.
+
+**Preconditions:**
+- PRE-1. The instructor is logged into the system.
+- PRE-2. The instructor is assigned to the course section (BR-section-scoped-access).
+
+**Postconditions:**
+- POST-1. Reminder emails have been attempted for the selected eligible students with outstanding submissions.
+- POST-2. A failed reminder to one student does not prevent reminders from being attempted for the remaining selected students.
+
+**Main Success Scenario:**
+1. The instructor indicates to view students with outstanding submissions for a selected week in a course section.
+2. The system verifies that the instructor has access to the course section (BR-section-scoped-access).
+3. The system determines the weekly activity report and peer evaluation submission status for each student in the course section for the selected week.
+4. The system identifies, separately for each submission type, students whose submission is considered outstanding according to BR-war-submission-status and BR-evaluation-submission-status.
+5. The system displays the students with outstanding submissions and identifies which submission type or types are outstanding for each student.
+6. The instructor selects one or more students with outstanding submissions to receive a reminder.
+7. The system determines whether each selected student's outstanding submission is still eligible to be submitted according to the applicable submission rules.
+8. The instructor confirms that reminders should be sent to the eligible selected students.
+9. The system attempts to send each eligible selected student a reminder identifying the outstanding submission or submissions.
+10. The system informs the instructor of the reminder results.
+11. Use case ends.
+
+**Extensions:**
+- **3a. A student is not assigned to a team:**
+  - 3a1. The system excludes the student from the outstanding-submission list in accordance with BR-team-assignment-required.
+  - 3a2. The system continues determining submission status for the remaining students.
+- **3b. The week to be evaluated is not one of the course section's active weeks:**
+  - 3b1. The system does not treat a peer evaluation as outstanding for that week in accordance with BR-active-weeks.
+  - 3b2. The system continues determining the student's weekly activity report status independently.
+- **3c. A student is deactivated:**
+  - 3c1. The system excludes the student from the outstanding-submission list.
+  - 3c2. The system continues determining submission status for the remaining students.
+- **4a. A student previously submitted an artifact but the submission was subsequently deleted:**
+  - 4a1. The system treats the artifact as outstanding because no current submitted record exists.
+  - 4a2. The system continues at step 5.
+- **5a. No students have outstanding submissions:**
+  - 5a1. The system informs the instructor that there are no outstanding submissions for the selected week.
+  - 5a2. Use case ends.
+- **7a. A selected student's peer evaluation submission window has closed:**
+  - 7a1. The system keeps the student and the peer evaluation visible as not submitted.
+  - 7a2. The system excludes the peer evaluation from the reminder and informs the instructor that a reminder cannot be sent for it because its submission window has closed (BR-evaluation-submission-window).
+  - 7a3. If the student's weekly activity report is also outstanding and remains eligible for reminder, the student remains eligible to receive a reminder for that report.
+- **7b. A selected student has already received a manual submission reminder during the current calendar day:**
+  - 7b1. The system does not allow another manual reminder to be sent to the student in accordance with BR-manual-reminder-frequency.
+  - 7b2. The system informs the instructor that the student has already received a manual reminder that day.
+  - 7b3. The system continues processing the remaining selected students.
+- **9a. The mail server rejects a student's email address:**
+  - 9a1. The system records the failed reminder attempt.
+  - 9a2. The system continues attempting reminders for the remaining selected students.
+  - 9a3. The system includes the failed reminder in the reminder results shown to the instructor.
+
+**Business Rules:** BR-section-scoped-access, BR-team-assignment-required, BR-active-weeks, BR-evaluation-submission-window, BR-war-submission-status, BR-evaluation-submission-status, BR-manual-reminder-frequency
+**Priority:** High
+**Frequency of Use:** Approximately once or more per week per instructor during weeks with weekly activity report or peer evaluation submissions.
+
+**Associated Information:**
+
+Details:
+- Submission status is determined independently for the weekly activity report and peer evaluation according to BR-war-submission-status and BR-evaluation-submission-status.
+- A student may therefore have one, both, or neither submission type outstanding for the selected week.
+- If a previously submitted artifact is deleted such that the applicable submission-status rule is no longer satisfied, the artifact is considered outstanding.
+**Assumptions:**
+**Open Issues:**
+
 ### **UC-STU-delete-student: The course admin deletes a student**
 
 **UC ID and Name:** UC-STU-delete-student: Delete a student
